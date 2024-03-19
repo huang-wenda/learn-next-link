@@ -9,11 +9,14 @@ import {
   Revenue,
 } from './definitions';
 import { formatCurrency } from './utils';
+// 退出静态渲染
+import {unstable_noStore as noStore} from 'next/cache'
 
 export async function fetchRevenue() {
   // Add noStore() here to prevent the response from being cached.
   // This is equivalent to in fetch(..., {cache: 'no-store'}).
-
+  // 动态渲染
+  noStore();
   try {
     // Artificially delay a response for demo purposes.
     // Don't do this in production :)
@@ -33,6 +36,8 @@ export async function fetchRevenue() {
 }
 
 export async function fetchLatestInvoices() {
+  // 动态渲染
+  noStore();
   try {
     const data = await sql<LatestInvoiceRaw>`
       SELECT invoices.amount, customers.name, customers.image_url, customers.email, invoices.id
@@ -53,6 +58,8 @@ export async function fetchLatestInvoices() {
 }
 
 export async function fetchCardData() {
+  // 动态渲染
+  noStore();
   try {
     // You can probably combine these into a single SQL query
     // However, we are intentionally splitting them to demonstrate
@@ -89,9 +96,12 @@ export async function fetchCardData() {
 
 const ITEMS_PER_PAGE = 6;
 export async function fetchFilteredInvoices(
+  
   query: string,
   currentPage: number,
 ) {
+  // 动态渲染
+  noStore();
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
   try {
@@ -124,6 +134,8 @@ export async function fetchFilteredInvoices(
 }
 
 export async function fetchInvoicesPages(query: string) {
+  // 动态渲染
+  noStore();
   try {
     const count = await sql`SELECT COUNT(*)
     FROM invoices
@@ -145,6 +157,8 @@ export async function fetchInvoicesPages(query: string) {
 }
 
 export async function fetchInvoiceById(id: string) {
+  // 动态渲染
+  noStore();
   try {
     const data = await sql<InvoiceForm>`
       SELECT
